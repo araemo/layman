@@ -8,7 +8,7 @@ inherit autotools eutils flag-o-matic toolchain-funcs user
 NDPI_PN="nDPI"
 NDPI_PV="2.8"
 NDPI_P="${NDPI_PN}-${NDPI_PV}"
-LUAJIT="LuaJIT-2.1.0-beta3"
+#LUAJIT="LuaJIT-2.1.0-beta3"
 
 DESCRIPTION="Network traffic analyzer with web interface"
 HOMEPAGE="http://www.ntop.org/"
@@ -41,7 +41,6 @@ RDEPEND="${DEPEND}
 PATCHES=(
 	"${FILESDIR}"/${PN}-3.2-gentoo.patch
 	"${FILESDIR}"/${PN}-3.2-mysqltool.patch
-	"${FILESDIR}"/${PN}-3.2-luajit.patch
 	"${FILESDIR}"/${PN}-3.2-remove-pool-limits.patch
 )
 
@@ -122,29 +121,29 @@ src_prepare() {
 
 	popd >/dev/null || die
 
-	pushd "${S}"/third-party/"${LUAJIT}"/src >/dev/null || die
+#	pushd "${S}"/third-party/"${LUAJIT}"/src >/dev/null || die
 
 	# ... and there's more.
-	ebegin "Preparing ${LUAJIT} source"
-	sed -e '/^CCOPT/s/ -O2 / /' \
-		-i Makefile
-	eend ${?} "LuaJIT preparation failed: ${?}" || die
-	ebegin "Building ${LUAJIT} source"
-	emake \
-		Q= \
-		PREFIX="${EPREFIX}/usr" \
-		MULTILIB="$(get_libdir)" \
-		DESTDIR="${D}" \
-		HOST_CC="$(tc-getBUILD_CC)" \
-		STATIC_CC="$(tc-getCC)" \
-		DYNAMIC_CC="$(tc-getCC) -fPIC" \
-		TARGET_LD="$(tc-getCC)" \
-		TARGET_AR="$(tc-getAR) rcus" \
-		TARGET_STRIP="true" \
-		INSTALL_LIB="${ED%/}/usr/$(get_libdir)"
-	eend ${?} "LuaJIT build failed: ${?}" || die
+#	ebegin "Preparing ${LUAJIT} source"
+#	sed -e '/^CCOPT/s/ -O2 / /' \
+#		-i Makefile
+#	eend ${?} "LuaJIT preparation failed: ${?}" || die
+#	ebegin "Building ${LUAJIT} source"
+#	emake \
+#		Q= \
+#		PREFIX="${EPREFIX}/usr" \
+#		MULTILIB="$(get_libdir)" \
+#		DESTDIR="${D}" \
+#		HOST_CC="$(tc-getBUILD_CC)" \
+#		STATIC_CC="$(tc-getCC)" \
+#		DYNAMIC_CC="$(tc-getCC) -fPIC" \
+#		TARGET_LD="$(tc-getCC)" \
+#		TARGET_AR="$(tc-getAR) rcus" \
+#		TARGET_STRIP="true" \
+#		INSTALL_LIB="${ED%/}/usr/$(get_libdir)"
+#	eend ${?} "LuaJIT build failed: ${?}" || die
 
-	popd >/dev/null || die
+#	popd >/dev/null || die
 
 	sed -e "s/@VERSION@/${PV}/g;s/@SHORT_VERSION@/${PV}/g" < "${S}/configure.seed" > "${S}/configure.ac" || die
 
