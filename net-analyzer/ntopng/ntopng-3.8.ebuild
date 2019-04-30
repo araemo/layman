@@ -4,11 +4,11 @@
 EAPI=6
 inherit autotools eutils flag-o-matic toolchain-funcs user
 
-# Oh god, this is horrible :(
-NDPI_PN="nDPI"
-NDPI_PV="2.8"
-NDPI_P="${NDPI_PN}-${NDPI_PV}"
-#LUAJIT="LuaJIT-2.1.0-beta3"
+## Oh god, this is horrible :(
+#NDPI_PN="nDPI"
+#NDPI_PV="2.8"
+#NDPI_P="${NDPI_PN}-${NDPI_PV}"
+##LUAJIT="LuaJIT-2.1.0-beta3"
 
 DESCRIPTION="Network traffic analyzer with web interface"
 HOMEPAGE="http://www.ntop.org/"
@@ -22,7 +22,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
 DEPEND="
-	!net-libs/nDPI
+	~net-libs/nDPI-2.8
 	dev-db/sqlite:3
 	dev-python/pyzmq
 	dev-libs/json-c:=
@@ -39,23 +39,14 @@ RDEPEND="${DEPEND}
 	dev-db/redis"
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-3.2-gentoo.patch
-	"${FILESDIR}"/${PN}-3.2-mysqltool.patch
-	"${FILESDIR}"/${PN}-3.2-remove-pool-limits.patch
+	"${FILESDIR}"/${PN}-3.8-gentoo.patch
+	"${FILESDIR}"/${PN}-3.8-mysqltool.patch
+	"${FILESDIR}"/${PN}-3.8-remove-pool-limits.patch
 )
 
 S="${WORKDIR}/${P}-stable"
 
 pkg_setup() {
-	if has_version net-libs/nDPI; then
-		eerror "Due to the enormous brokenness of the ${PN} source, it is not"
-		eerror "possible to build ${PN} if nDPI is present in any way on the"
-		eerror "system, even though ${PN} requires nDPI to operate."
-		eerror
-		eerror "Please completely remove net-libs/nDPI *before* attempting to"
-		eerror "install ${PN}."
-		die "net-libs/nDPI cannot be installed"
-	fi
 }
 
 src_prepare() {
@@ -82,44 +73,44 @@ src_prepare() {
 	# fails if the external code is correctly installed.
 	# This does not inspire confidence... :(
 
-	pushd "${S}"/../"${NDPI_P}"-stable >/dev/null || die
+	#pushd "${S}"/../"${NDPI_P}"-stable >/dev/null || die
 
-	ebegin "Preparing nDPI ${NDPI_PV} source"
+	#ebegin "Preparing nDPI ${NDPI_PV} source"
 
-	# We love well-maintained source repos...
-	[[ -e lib ]] && rm lib
+	## We love well-maintained source repos...
+	#[[ -e lib ]] && rm lib
 
-	# Let's not sink to this level of craziness...
-	#./autogen.sh
+	## Let's not sink to this level of craziness...
+	##./autogen.sh
 
-	# ... but instead try to sort it out ourselves:
-	NDPI_MAJOR="${PV%.*}"
-	NDPI_MINOR="${PV#*.}"
-	NDPI_PATCH="0"
-	[[ "${PVR}" == *-r* ]] && NDPI_PATCH="${PVR#*-r}"
-	NDPI_VERSION_SHORT="${NDPI_MAJOR}.${NDPI_MINOR}.${NDPI_PATCH}"
+	## ... but instead try to sort it out ourselves:
+	#NDPI_MAJOR="${PV%.*}"
+	#NDPI_MINOR="${PV#*.}"
+	#NDPI_PATCH="0"
+	#[[ "${PVR}" == *-r* ]] && NDPI_PATCH="${PVR#*-r}"
+	#NDPI_VERSION_SHORT="${NDPI_MAJOR}.${NDPI_MINOR}.${NDPI_PATCH}"
 
-	ebegin "Generating configure.ac ..."
-	sed -e "s/@NDPI_MAJOR@/${NDPI_MAJOR}/g" \
-		-e "s/@NDPI_MINOR@/${NDPI_MINOR}/g" \
-		-e "s/@NDPI_PATCH@/${NDPI_PATCH}/g" \
-		-e "s/@NDPI_VERSION_SHORT@/${NDPI_VERSION_SHORT}/g" \
-		configure.seed > configure.ac ||
-	eend ${?}  "Version substitution failed: ${?}" || die
+	#ebegin "Generating configure.ac ..."
+	#sed -e "s/@NDPI_MAJOR@/${NDPI_MAJOR}/g" \
+	#	-e "s/@NDPI_MINOR@/${NDPI_MINOR}/g" \
+	#	-e "s/@NDPI_PATCH@/${NDPI_PATCH}/g" \
+	#	-e "s/@NDPI_VERSION_SHORT@/${NDPI_VERSION_SHORT}/g" \
+	#	configure.seed > configure.ac ||
+	#eend ${?}  "Version substitution failed: ${?}" || die
 
-	# Now let's let Portage do its thing ...
-	S="${WORKDIR}/${NDPI_P}-stable" PATCHES="" default
-	eautoreconf || die "eautoreconf failed: ${?}"
-	NDPI_HOME=../"${NDPI_P}"-stable econf
+	## Now let's let Portage do its thing ...
+	#S="${WORKDIR}/${NDPI_P}-stable" PATCHES="" default
+	#eautoreconf || die "eautoreconf failed: ${?}"
+	#NDPI_HOME=../"${NDPI_P}"-stable econf
 
-	eend ${?} "nDPI preparation failed: ${?}" || die
+	#eend ${?} "nDPI preparation failed: ${?}" || die
 
-	# Ogodogodogodogod :(
-	ebegin "Building nDPI ${NDPI_PV} source"
-	emake
-	eend ${?} "nDPI build failed" || die
+	## Ogodogodogodogod :(
+	#ebegin "Building nDPI ${NDPI_PV} source"
+	#emake
+	#eend ${?} "nDPI build failed" || die
 
-	popd >/dev/null || die
+	#popd >/dev/null || die
 
 #	pushd "${S}"/third-party/"${LUAJIT}"/src >/dev/null || die
 
@@ -153,10 +144,10 @@ src_prepare() {
 }
 
 src_configure() {
-	# ntopng can't find its own included source packages :(
-	append-cppflags -Ithird-party/LuaJIT-2.1.0-beta3/src
+	## ntopng can't find its own included source packages :(
+	#append-cppflags -Ithird-party/LuaJIT-2.1.0-beta3/src
 
-	export NDPI_HOME=../"${NDPI_P}"-stable
+	#export NDPI_HOME=../"${NDPI_P}"-stable
 	default
 }
 

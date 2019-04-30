@@ -1,0 +1,10 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -29,7 +29,6 @@
+ # On CentOS 6 `git rev-list HEAD --count` does not work
+ #
+ #
+-REVISION=`git log --pretty=oneline | wc -l`
+ 
+ if test -d "/usr/local/include"; then
+ CFLAGS="${CFLAGS} -I/usr/local/include"
