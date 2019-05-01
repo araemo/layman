@@ -13,8 +13,7 @@ inherit autotools eutils flag-o-matic toolchain-funcs user
 DESCRIPTION="Network traffic analyzer with web interface"
 HOMEPAGE="http://www.ntop.org/"
 # Use (updated) stable branch rather than release tag...
-SRC_URI="https://github.com/ntop/${PN}/archive/${PV}-stable.zip -> ${P}.zip
-	https://github.com/ntop/${NDPI_PN}/archive/${NDPI_PV}-stable.zip -> ${NDPI_P}-stable.zip"
+SRC_URI="https://github.com/ntop/${PN}/archive/${PV}-stable.zip -> ${P}.zip"
 RESTRICT="mirror"
 
 LICENSE="GPL-3"
@@ -34,6 +33,7 @@ DEPEND="
 	net-analyzer/rrdtool
 	net-libs/libpcap
 	net-misc/curl
+	dev-libs/libmaxminddb
 	virtual/libmysqlclient"
 RDEPEND="${DEPEND}
 	dev-db/redis"
@@ -45,9 +45,6 @@ PATCHES=(
 )
 
 S="${WORKDIR}/${P}-stable"
-
-pkg_setup() {
-}
 
 src_prepare() {
 
