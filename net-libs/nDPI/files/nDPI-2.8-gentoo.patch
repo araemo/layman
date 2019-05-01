@@ -1,0 +1,23 @@
+--- a/src/lib/Makefile.in
++++ b/src/lib/Makefile.in
+@@ -11,7 +11,7 @@
+ # Installation directories
+ #
+ prefix     = @prefix@
+-libdir     = ${prefix}/lib
++libdir     = ${prefix}/lib64
+ includedir = ${prefix}/include/ndpi
+ CC         = @CC@
+ CFLAGS     += -fPIC -DPIC -I../include -Ithird_party/include -DNDPI_LIB_COMPILATION -O2 -g
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,7 +1,7 @@
+ ACLOCAL_AMFLAGS = -I m4
+ SUBDIRS = src/lib example tests
+
+-pkgconfigdir = $(prefix)/libdata/pkgconfig
++pkgconfigdir = $(prefix)/lib64/pkgconfig
+ pkgconfig_DATA = libndpi.pc
+
+ EXTRA_DIST = autogen.sh
+
